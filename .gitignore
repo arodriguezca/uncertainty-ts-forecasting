@@ -1,3 +1,8 @@
+data/
+.vscode/
+.ipynb_checkpoints/
+.git/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
