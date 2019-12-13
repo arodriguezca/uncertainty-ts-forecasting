@@ -353,26 +353,7 @@ class BBBRNN(BBBLayer):
                                                         self.hidden_size).zero_(), requires_grad=False)
             if self.mode == 'LSTM':
                 hx = (hx, hx)
-        
-
-        # func = self._backend.RNN(
-        #     self.mode,
-        #     self.input_size,
-        #     self.hidden_size,
-        #     num_layers=self.num_layers,
-        #     batch_first=self.batch_first,
-        #     dropout=self.dropout,
-        #     train=self.training,
-        #     bidirectional=self.bidirectional,
-        #     batch_sizes=batch_sizes,
-        #     dropout_state=self.dropout_state,
-        #     flat_weight=None
-        # )
-        # # change this line
-        # output, hidden = func(input, self.all_weights, hx)
-        # return output, hidden
-
-        # print(input.shape)
+    
         batch_sizes=1
 
         func = LSTM(
@@ -382,11 +363,6 @@ class BBBRNN(BBBLayer):
             # num_layers=self.num_layers,
             batch_first=self.batch_first,
             dropout=self.dropout
-            # train=self.training,
-            # batch_sizes=batch_sizes,
-            # dropout_state=self.dropout_state,
-            # flat_weight=None
-            # bidirectional=self.bidirectional
         )
         # change this line
         input = input.view(batch_sizes, input.shape[-2], input.shape[-1])

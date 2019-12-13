@@ -1,3 +1,7 @@
+'''
+    Alex: for some unknown reason, the Bayesian RNN doesn't learn
+'''
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -84,43 +88,5 @@ for name, df, col_idx, seq_len in zip(['air'],[air], [3], [100]):
     df_result_1.plot(figsize=(14, 7))
     print("Test loss %.4f" % test_loss_1)
 
-
-def uncertainty_estimate(x, model, num_samples, future, dropout_rate, decay, N, l2=0.01):
-    x = x.to(device)
-#         print(x.shape)
-#         print(self.model(x, future=future)[:,-future:].cpu().detach().numpy())
-#     print(model(x, future=future)[:,-future:].cpu().detach().numpy().shape)
-#         outputs = np.hstack([self.model(x, future=future)[:,-future:].cpu().detach().numpy() for i in range(num_samples)]) # n번 inference, output.shape = [20, N]
-    # CONE ESTIMATION
-    outputs = torch.zeros((x.shape[0], future, num_samples))
-    
-    for s in range(num_samples):
-        new_gt = torch.Tensor([]).to(device)
-        for f in range(future):
-            if new_gt.size() != torch.Size([0]):
-#                 x_new = torch.cat((x, new_gt.view(-1,1)),1)
-                x_new = torch.cat((x_new, new_gt.view(-1,1)),1)
-            else:
-                x_new = x
-#             new_gt = model(x, future=1)[:,-1]
-            new_gt = model(x_new, future=1)[:,-1]
-            outputs[:,f,s]=new_gt
-    print('shape',outputs.shape)
-#     print(outputs.mean(-1))
-#     print(outputs.std(-1))
-    y_variance = outputs.var(axis=-1)
-    outputs = torch.Tensor(scaler.inverse_transform(outputs.cpu().detach().numpy()))
-    tau = l2 * (1. - dropout_rate) / (2. * N * decay) # What is this doing??
-    y_variance += (1. / tau)
-    return outputs.mean(-1), outputs.std(-1)
-
-
-# uncertainity_estimate(x, model, num_samples, l2, future)
-# from dropout_rnn import DRNN, Optimization, generate_sequence, to_dataframe, inverse_transform, transform_data # Arka, feel free to change these names
-FUTURE = 15
-test_size = 100
-N = x_train.shape[0]
-print(N)
-predicted_mean, predicted_sd = uncertainty_estimate(x_test[:test_size,:-FUTURE], model_1, num_samples=50, future=FUTURE, dropout_rate=dropout_frac, decay=decay, N=N)
 
 
