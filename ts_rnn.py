@@ -9,9 +9,9 @@ from torch.autograd import Variable
 import torch
 
 class Model(nn.Module):
-    def __init__(self, input_size, hidden_size, output_size, rnn=nn.LSTMCell):
+    def __init__(self, input_size, hidden_size, output_size, dropout_frac, rnn=nn.LSTMCell):
         '''
-            @param rnn: rnn model of choice - insert here ours
+            @param drnn: rnn model of choice with dropout - insert here ours
         '''
         super(Model, self).__init__()
         self.input_size = input_size
@@ -19,6 +19,8 @@ class Model(nn.Module):
         self.output_size = output_size
         self.lstm = rnn(self.input_size, self.hidden_size)
         self.linear = nn.Linear(self.hidden_size, self.output_size)
+        self.dropout_frac = dropout_frac
+        self.dropout = nn.Dropout(p=self.dropout_frac)
 
     def forward(self, input, future=0, y=None):
         outputs = []
@@ -39,7 +41,9 @@ class Model(nn.Module):
             h_t, c_t = self.lstm(output, (h_t, c_t))
             output = self.linear(h_t)
             outputs += [output]
+        # print('>>',outputs)
         outputs = torch.stack(outputs, 1).squeeze(2)
+        # print('**>>',outputs.shape)
         return outputs
 
 
