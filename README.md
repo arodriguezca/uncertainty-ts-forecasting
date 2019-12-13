@@ -6,8 +6,6 @@
 
 - Datasets:
   1. Air quality dataset [https://archive.ics.uci.edu/ml/datasets/Air+Quality]
-  2. Stock exchange dataset [https://archive.ics.uci.edu/ml/datasets/ISTANBUL+STOCK+EXCHANGE]
-  3. U.S. influenza-like illness incidences [\url{https://github.com/cmu-delphi/delphi-epidata]
 
 - Dependencies
   - Python 3.6+
